@@ -1,0 +1,33 @@
+{
+    "name": "remote-whiteboard",
+    "image": "mcr.microsoft.com/vscode/devcontainers/base:debian-12",
+    "features": {
+        "./qt6": {}
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "C_Cpp.default.compileCommands": "${workspaceFolder}/build/compile_commands.json",
+                "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+                "cmake.configureOnOpen": false,
+                "[c]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "xaver.clang-format"
+                },
+                "[cpp]": {
+                    "editor.formatOnSave": true,
+                    "editor.defaultFormatter": "xaver.clang-format"
+                },
+                "search.exclude": {
+                    "gitignore": true
+                },
+                "terminal.integrated.shell.linux": "/bin/bash"
+            },
+            "extensions": [
+                "TheQtCompany.qt",
+                "xaver.clang-format"
+            ]
+        }
+    },
+    "remoteUser": "vscode"
+}
