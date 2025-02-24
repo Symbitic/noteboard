@@ -2,7 +2,9 @@
     "name": "remote-whiteboard",
     "image": "mcr.microsoft.com/vscode/devcontainers/base:debian-12",
     "features": {
-        "./qt6": {}
+        "./qt6": {
+            "modules": "qthttpserver"
+        }
     },
     "customizations": {
         "vscode": {
