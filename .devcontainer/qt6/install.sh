@@ -24,7 +24,7 @@ UPDATE_RC="${UPDATE_RC:-"true"}"
 # Support modules
 if [ ${#MODULES[@]} -gt 0 ]
 then
-    QT_MODULES=${MODULES[*]}
+    QT_MODULES=$(echo ${MODULES[*]} | tr ',' ' ')
     QT_MODULES_FLAG="-m"
     echo "(*) Modules: ${QT_MODULES}"
 fi
@@ -123,7 +123,8 @@ then
 fi
 
 # Install
-echo "(*) Installing Qt6 ${VERSION} for ${HOST} ${TARGET} ${ARCH}..."
+echo "(*) Installing Qt6..."
+echo aqt install-qt ${HOST} ${TARGET} ${VERSION} ${ARCH} --outputdir "${INSTALL_DIR}" ${QT_MODULES_FLAG} ${QT_MODULES}
 aqt install-qt ${HOST} ${TARGET} ${VERSION} ${ARCH} --outputdir "${INSTALL_DIR}" ${QT_MODULES_FLAG} ${QT_MODULES}
 if (( $? > 0 ))
 then
