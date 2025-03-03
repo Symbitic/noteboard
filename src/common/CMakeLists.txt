@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 qt_add_library(common OBJECT
-    todo.cpp todo.h
+    item.cpp item.h
 )
-target_link_libraries(common PRIVATE Qt::Core Qt::Network)
+target_link_libraries(common PRIVATE Qt::Core Qt::Network Qt::Quick)
 target_include_directories(common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})

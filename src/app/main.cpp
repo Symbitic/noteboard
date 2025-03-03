@@ -1,25 +1,50 @@
 // Copyright (C) 2025 Alex Shaw <alex.shaw.as@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
-#include <QCommandLineParser>
-#include <QLibraryInfo>
-#include <QCoreApplication>
-
-using namespace Qt::StringLiterals;
+#include <QGuiApplication>
+#include <QQmlApplicationEngine>
+#include <QSettings>
+#include <QQuickStyle>
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setApplicationName(u"Remote Whiteboard"_s);
+    QGuiApplication app(argc, argv);
+    QGuiApplication::setApplicationName("Remote Whiteboard");
 
-    QCoreApplication app(argc, argv);
+    QSettings settings;
+    const QString style = settings.value("style").toString();
+    if (qEnvironmentVariableIsEmpty("QT_QUICK_CONTROLS_STYLE") && style.isEmpty()) {
+#if defined(Q_OS_MACOS)
+        QQuickStyle::setStyle(QString("iOS"));
+#elif defined(Q_OS_IOS)
+        QQuickStyle::setStyle(QString("iOS"));
+#elif defined(Q_OS_WINDOWS)
+        QQuickStyle::setStyle(QString("Windows"));
+#elif defined(Q_OS_ANDROID)
+        QQuickStyle::setStyle(QString("Material"));
+#endif
+    } else {
+        QQuickStyle::setStyle(style);
+    }
 
-    QCommandLineParser parser;
-    parser.addOptions({
-            { "port", QCoreApplication::translate("main", "The port the server listens on."),
-              "port" },
-    });
-    parser.addHelpOption();
-    parser.process(app);
+    if (style.isEmpty()) {
+        settings.setValue(QString("style"), QQuickStyle::name());
+    }
+
+    QStringList builtInStyles = { QString("Basic"), QString("Material"), QString("Universal") };
+#if defined(Q_OS_MACOS)
+    builtInStyles << QString("iOS");
+#elif defined(Q_OS_IOS)
+    builtInStyles << QString("iOS");
+#elif defined(Q_OS_WINDOWS)
+    builtInStyles << QString("Windows");
+#endif
+
+    QQmlApplicationEngine engine;
+    QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
+
+    engine.setInitialProperties({ { "builtInStyles", builtInStyles } });
+    engine.loadFromModule("RemoteWhiteboard", "Main");
 
     return app.exec();
 }
