@@ -18,7 +18,7 @@ option(ENABLE_WEB "Build the web frontend" ON)
 
 find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Gui Network)
 find_package(Qt6 CONFIG OPTIONAL_COMPONENTS HttpServer Quick QuickControls2)
-qt_standard_project_setup()
+qt_standard_project_setup(REQUIRES 6.8)
 
 if(NOT ENABLE_GUI AND NOT ENABLE_SERVER AND NOT ENABLE_WEB)
     message(NOTICE "No build targets have been enabled.")

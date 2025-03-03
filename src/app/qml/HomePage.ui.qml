@@ -14,4 +14,6 @@ import RemoteWhiteboard
 
 Page {
     id: root
+
+    property list<string> builtInStyles
 }

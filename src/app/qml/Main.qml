@@ -25,7 +25,7 @@ Window {
     Material.theme: Constants.isDarkModeActive ? Material.Dark : Material.Light
     */
 
-    property variant builtInStyles
+    property list<string> builtInStyles
 
     StackView {
         id: stackView
