@@ -5,11 +5,13 @@
 #include <QQmlApplicationEngine>
 #include <QSettings>
 #include <QQuickStyle>
+#include <unistd.h>
 
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QGuiApplication::setApplicationName("Remote Whiteboard");
+    QGuiApplication::setOrganizationName("N/A");
 
     QSettings settings;
     const QString style = settings.value("style").toString();
@@ -45,6 +47,9 @@ int main(int argc, char *argv[])
 
     engine.setInitialProperties({ { "builtInStyles", builtInStyles } });
     engine.loadFromModule("RemoteWhiteboard", "Main");
+    if (engine.rootObjects().isEmpty()) {
+        exit(EXIT_FAILURE);
+    }
 
     return app.exec();
 }
