@@ -6,9 +6,5 @@ import QtQuick
 import QtCore
 
 Settings {
-    enum Theme {
-        Light,
-        Dark
-    }
-    property int theme: Qt.styleHints.colorScheme === Qt.Dark ? Settings.Theme.Dark : Settings.Theme.Light
+    property int theme: Qt.styleHints.colorScheme === Qt.Dark ? Constants.Theme.Dark : Constants.Theme.Light
 }

@@ -8,6 +8,9 @@ qt_add_executable(remote-whiteboard
 set_target_properties(remote-whiteboard PROPERTIES
     WIN32_EXECUTABLE TRUE
     MACOSX_BUNDLE TRUE
+    MACOSX_BUNDLE_GUI_IDENTIFIER "io.symbitic.remote-whiteboard"
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
 )
 
 set_source_files_properties(qml/AppSettings.qml
@@ -28,6 +31,9 @@ qt_add_qml_module(remote-whiteboard
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
         qml/Main.qml
+    RESOURCES
+        icons/settings-dark.svg
+        icons/settings.svg
 )
 
 target_link_libraries(remote-whiteboard PRIVATE
@@ -37,3 +43,18 @@ target_link_libraries(remote-whiteboard PRIVATE
     Qt::Quick
     Qt::QuickControls2
 )
+
+install(TARGETS remote-whiteboard
+    BUNDLE  DESTINATION .
+    RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
+)
+
+qt_generate_deploy_qml_app_script(
+    TARGET remote-whiteboard
+    OUTPUT_SCRIPT deploy_script
+    MACOS_BUNDLE_POST_BUILD
+    NO_UNSUPPORTED_PLATFORM_ERROR
+    DEPLOY_USER_QML_MODULES_ON_UNSUPPORTED_PLATFORM
+)
+install(SCRIPT ${deploy_script})

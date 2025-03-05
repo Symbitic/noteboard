@@ -16,4 +16,38 @@ Page {
     id: root
 
     property list<string> builtInStyles
+
+    padding: 0
+
+    header: ToolBar {
+        RowLayout {
+            anchors.fill: parent
+            spacing: 20
+
+            Item {
+                id: spacer
+                visible: true
+            }
+
+            Label {
+                Layout.fillWidth: true
+
+                text: qsTr("Remote W")
+                color: Constants.secondaryColor
+                elide: Label.ElideRight
+                horizontalAlignment: Qt.AlignHCenter
+                verticalAlignment: Qt.AlignVCenter
+                font.pixelSize: AppSettings.fontSize + 4
+                font.bold: true
+            }
+
+            ToolButton {
+                id: settingsButton
+
+                icon.source: Constants.iconSource("settings")
+                palette.button: Constants.isDarkMode ? "#30D158" : "#34C759"
+                palette.highlight: Constants.isDarkMode ? "#30DB5B" : "#248A3D"
+            }
+        }
+    }
 }

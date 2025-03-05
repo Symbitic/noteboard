@@ -5,10 +5,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-/*
 import QtQuick.Controls.Universal
 import QtQuick.Controls.Material
-*/
 import RemoteWhiteboard
 
 Window {
@@ -20,12 +18,15 @@ Window {
     minimumWidth: 270
     visible: true
 
-    /*
-    Universal.theme: Constants.isDarkModeActive ? Universal.Dark : Universal.Light
-    Material.theme: Constants.isDarkModeActive ? Material.Dark : Material.Light
-    */
+    Universal.theme: Constants.isDarkMode ? Universal.Dark : Universal.Light
+    Material.theme: Constants.isDarkMode ? Material.Dark : Material.Light
 
     property list<string> builtInStyles
+
+    Action {
+        shortcut: StandardKey.Quit
+        onTriggered: close()
+    }
 
     StackView {
         id: stackView
