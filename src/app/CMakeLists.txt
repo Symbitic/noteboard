@@ -27,13 +27,21 @@ qt_add_qml_module(remote-whiteboard
     URI RemoteWhiteboard
     QML_FILES
         qml/AppSettings.qml
+        qml/ColorsPage.ui.qml
         qml/Constants.qml
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
         qml/Main.qml
+        qml/ServicesPage.qml
+        qml/ServicesView.ui.qml
+        qml/SettingsPage.qml
+        qml/SettingsView.ui.qml
+        qml/SideBar.ui.qml
     RESOURCES
-        icons/settings-dark.svg
+        icons/drawer.svg
+        icons/services.svg
         icons/settings.svg
+        icons/sticky.svg
 )
 
 target_link_libraries(remote-whiteboard PRIVATE

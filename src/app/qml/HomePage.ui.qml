@@ -12,42 +12,126 @@ import QtQuick.Controls
 import QtQuick.Layouts
 import RemoteWhiteboard
 
+import QtQml.Models
+
 Page {
     id: root
 
-    property list<string> builtInStyles
+    topPadding: 4
+    leftPadding: 27
+    rightPadding: 27
+    bottomPadding: 13
 
-    padding: 0
+    ListModel {
+        id: notesList
 
-    header: ToolBar {
-        RowLayout {
-            anchors.fill: parent
-            spacing: 20
+        ListElement {
+            uuid: "1"
+            text: "Watch and sort video collection"
+        }
+        ListElement {
+            uuid: "2"
+            text: "**WebComponents Framework**\n\n- Make basic website\n- GitHub Workflow to enforce conventional commits\n"
+        }
+        ListElement {
+            uuid: "3"
+            text: "Sign up for Benefits"
+        }
+        ListElement {
+            uuid: "4"
+            text: "Qt Devcontainer Feature"
+        }
+    }
+    Component.onCompleted: {
+        for (let i=0; i<notesList.count; i++) {
+            notesList.setProperty(i, "createdDate", new Date())
+        }
+    }
 
-            Item {
-                id: spacer
-                visible: true
-            }
+    Label {
+        id: title
 
-            Label {
+        width: root.width
+        visible: internal.showTitle
+        text: qsTr("Notes")
+        font: Constants.largeFont
+        elide: Text.ElideRight
+    }
+
+    GridLayout {
+        id: grid
+
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: title.bottom
+        anchors.topMargin: 10
+        rowSpacing: 20
+        columnSpacing: 20
+        columns: internal.columns
+
+        Repeater {
+            model: 3
+            
+            Rectangle {
+                required property int index
+
                 Layout.fillWidth: true
-
-                text: qsTr("Remote W")
-                color: Constants.secondaryColor
-                elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignHCenter
-                verticalAlignment: Qt.AlignVCenter
-                font.pixelSize: AppSettings.fontSize + 4
-                font.bold: true
-            }
-
-            ToolButton {
-                id: settingsButton
-
-                icon.source: Constants.iconSource("settings")
-                palette.button: Constants.isDarkMode ? "#30D158" : "#34C759"
-                palette.highlight: Constants.isDarkMode ? "#30DB5B" : "#248A3D"
+                //Layout.fillHeight: true
+                //Layout.preferredWidth: 40
+                Layout.preferredHeight: 40
+                color: index % 2 === 0 ? "#5d5b59" : "#1e1b18"
+                Label {
+                    anchors.centerIn: parent
+                    text: "Item " + (parent.index+1)
+                    color: "white"
+                }
             }
         }
     }
+
+    QtObject {
+        id: internal
+
+        property int columns: 1
+        property bool showTitle: false
+    }
+
+    states: [
+        State {
+            name: "desktopLayout"
+            when: Constants.layout === Constants.Layout.Desktop
+
+            PropertyChanges {
+                target: internal
+                columns: 3
+                showTitle: true
+            }
+            AnchorChanges {
+                target: grid
+                anchors.top: title.bottom
+            }
+        },
+        State {
+            name: "mobileLayout"
+            when: Constants.layout !== Constants.Layout.Desktop
+
+            PropertyChanges {
+                target: internal
+                columns: 1
+                showTitle: false
+            }
+            AnchorChanges {
+                target: grid
+                anchors.top: parent.top
+            }
+        }
+    ]
+
+    /*
+    NewTask {
+        id: newTask
+
+        visible: false
+    }
+    */
 }

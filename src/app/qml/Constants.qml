@@ -9,14 +9,40 @@ QtObject {
         Light,
         Dark
     }
+    enum View {
+        Home,
+        Services,
+        Settings,
+        Colors,
+        Back = -1
+    }
+    enum Layout {
+        Desktop,
+        Mobile
+    }
+    enum Breakpoint {
+        Desktop = 1000
+    }
+
+    property int layout: Constants.Layout.Mobile
+    property int currentView: Constants.View.Home
 
     readonly property bool isDarkMode: AppSettings.theme === Constants.Theme.Dark
     readonly property bool isMobile: Qt.platform.os === "android" || Qt.platform.os === "ios"
-    readonly property color mainColor: isDarkMode ? "#09102B" : "#FFFFFF"
-    readonly property color secondaryColor: isDarkMode ? "#FFFFFF" : "#09102B"
-    readonly property color highlightColor: "#41CD52"
 
-    function iconSource(filename) {
-        return `qrc:/qt/qml/RemoteWhiteboard/icons/${filename}${isDarkMode ? "-dark.svg" : ".svg"}`
+    readonly property font largeFont: Qt.font({
+        family: Qt.application.font.family,
+        pixelSize: Qt.application.font.pixelSize * 2
+    })
+
+    function init(item: QtObject) {
+        // Make layout responsive.
+        Constants.layout = Qt.binding(() => {
+            if (item.width >= Constants.Breakpoint.Desktop) {
+                return Constants.Layout.Desktop;
+            } else {
+                return Constants.Layout.Mobile;
+            }
+        });
     }
 }
