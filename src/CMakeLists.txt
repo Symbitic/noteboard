@@ -10,7 +10,3 @@ endif()
 if(ENABLE_SERVER)
     add_subdirectory(server)
 endif()
-
-if(ENABLE_WEB)
-    add_subdirectory(web)
-endif()

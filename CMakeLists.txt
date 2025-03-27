@@ -14,20 +14,19 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(ENABLE_GUI "Build the GUI" ON)
 option(ENABLE_SERVER "Build the server" ON)
-option(ENABLE_WEB "Build the web frontend" ON)
 
 find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Gui Network)
 find_package(Qt6 CONFIG OPTIONAL_COMPONENTS HttpServer Quick QuickControls2)
 qt_standard_project_setup(REQUIRES 6.8)
 
-if(NOT ENABLE_GUI AND NOT ENABLE_SERVER AND NOT ENABLE_WEB)
+if(NOT ENABLE_GUI AND NOT ENABLE_SERVER)
     message(NOTICE "No build targets have been enabled.")
     return()
 elseif(ENABLE_GUI AND NOT (TARGET Qt6::Quick AND TARGET Qt6::QuickControls2))
     message(NOTICE "Missing Qt6 QuickControls2 for GUI target")
     return()
-elseif(ENABLE_WEB AND NOT TARGET Qt6::HttpServer)
-    message(NOTICE "Missing Qt6 HttpServer for web target")
+elseif(ENABLE_SERVER AND NOT TARGET Qt6::HttpServer)
+    message(NOTICE "Missing Qt6 HttpServer for server target")
     return()
 endif()
 
