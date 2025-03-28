@@ -6,6 +6,7 @@ import QtQuick
 
 QtObject {
     enum Theme {
+        System,
         Light,
         Dark
     }
@@ -27,7 +28,7 @@ QtObject {
     property int layout: Constants.Layout.Mobile
     property int currentView: Constants.View.Home
 
-    readonly property bool isDarkMode: AppSettings.theme === Constants.Theme.Dark
+    readonly property bool isDarkMode: AppSettings.theme === Constants.Theme.Dark || (AppSettings.theme === Constants.Theme.System && Qt.styleHints.colorScheme === Qt.Dark)
     readonly property bool isMobile: Qt.platform.os === "android" || Qt.platform.os === "ios"
 
     readonly property font largeFont: Qt.font({
