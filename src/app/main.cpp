@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
         settings.setValue(QString("style"), QQuickStyle::name());
     }
 
-    QStringList builtInStyles = { QString("Basic"), QString("Material"), QString("Universal") };
+    QStringList builtInStyles = { QString("Fusion"), QString("Material"), QString("Universal") };
 #if defined(Q_OS_MACOS)
     builtInStyles << QString("iOS");
 #elif defined(Q_OS_IOS)
