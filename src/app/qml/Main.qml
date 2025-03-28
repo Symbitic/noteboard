@@ -5,6 +5,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
+import QtQuick.Controls.Universal
+import QtQuick.Controls.Material
 import QtQuick.Layouts
 import RemoteWhiteboard
 
@@ -77,6 +79,9 @@ ApplicationWindow {
                 break;
         }
     }
+
+    Universal.theme: Constants.isDarkMode ? Universal.Dark : Universal.Light
+    Material.theme: Constants.isDarkMode ? Material.Dark : Material.Light
 
     Shortcut {
         sequences: ["Esc", "Back"]

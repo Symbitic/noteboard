@@ -15,15 +15,46 @@ import RemoteWhiteboard
 Page {
     id: root
 
-    property list<string> builtInStyles
+    property alias stylesComboBox: stylesComboBox
+    property alias themesComboBox: themesComboBox
+    property alias styles: stylesComboBox.model
+    property alias themes: themesComboBox.model
+    property alias currentStyleIndex: stylesComboBox.currentIndex
+    property alias currentThemeIndex: themesComboBox.currentIndex
+    property alias showStyleTip: styleTip.visible
 
-    Column {
-        Repeater {
-            model: root.builtInStyles
-            Label {
-                required property string modelData
-                text: modelData
-            }
+    padding: 10
+
+    ToolTip {
+        id: styleTip
+
+        text: qsTr("Please restart the application to apply the new style")
+        timeout: 5000
+        anchors.centerIn: parent
+    }
+
+    GridLayout {
+        id: grid
+        width: parent.width
+        anchors.margins: 10
+        columns: 2
+
+        Label {
+            text: qsTr("Style:")
+        }
+        ComboBox {
+            id: stylesComboBox
+            Layout.alignment: Qt.AlignRight
+        }
+
+        Label {
+            text: qsTr("Theme:")
+            enabled: themesComboBox.count > 0
+        }
+        ComboBox {
+            id: themesComboBox
+            enabled: count > 0
+            Layout.alignment: Qt.AlignRight
         }
     }
 }

@@ -6,5 +6,6 @@ import QtQuick
 import QtCore
 
 Settings {
-    property int theme: Qt.styleHints.colorScheme === Qt.Dark ? Constants.Theme.Dark : Constants.Theme.Light
+    property string style
+    property int theme: Constants.Theme.System
 }
