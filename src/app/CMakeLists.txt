@@ -34,10 +34,10 @@ qt_add_qml_module(noteboard
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
         qml/Main.qml
-        qml/ServicesPage.qml
-        qml/ServicesView.ui.qml
-        qml/SettingsPage.qml
-        qml/SettingsView.ui.qml
+        qml/ServicesPage.ui.qml
+        qml/ServicesPageContainer.qml
+        qml/SettingsPage.ui.qml
+        qml/SettingsPageContainer.qml
         qml/SideBar.ui.qml
     RESOURCES
         icons/drawer.svg

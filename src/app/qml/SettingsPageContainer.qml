@@ -4,7 +4,7 @@
 import QtQuick
 import QtQuick.Controls
 
-SettingsView {
+SettingsPage {
     id: root
     property list<string> builtInStyles
     styles: builtInStyles

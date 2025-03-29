@@ -4,4 +4,4 @@
 import QtQuick
 import QtQuick.Controls
 
-ServicesView {}
+ServicesPage {}

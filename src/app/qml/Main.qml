@@ -113,13 +113,13 @@ ApplicationWindow {
         ListElement {
             title: qsTr("Services")
             page: Constants.View.Services
-            source: "qrc:/qt/qml/Noteboard/qml/ServicesPage.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/ServicesPageContainer.qml"
             iconName: "services"
         }
         ListElement {
             title: qsTr("Settings")
             page: Constants.View.Settings
-            source: "qrc:/qt/qml/Noteboard/qml/SettingsPage.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/SettingsPageContainer.qml"
             iconName: "settings"
         }
         ListElement {
