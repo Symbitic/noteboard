@@ -20,6 +20,46 @@ Page {
     rightPadding: 27
     bottomPadding: 13
 
+    function extractTitle(markdown: string): string {
+        const lines = markdown.replace(/\r\n|\r/g, "\n").split("\n").map((str) => str.trim());
+        let paragraphLines = [];
+
+        for (const line of lines) {
+            // Skip blank lines and non-paragraph blocks
+            if (!line || /^([-+*] |\d+\.\s+|>)/.test(line)) {
+                // If we already have the title lines, stop processing. Otherwise, ignore.
+                if (paragraphLines.length > 0) {
+                    break;
+                } else {
+                    continue;
+                }
+            }
+
+            // Headings are always a single line.
+            if (/^#+\s/.test(line)) {
+                paragraphLines = [line.replace(/^#+\s/, "")];
+                break;
+            }
+
+            paragraphLines.push(line);
+        }
+
+        return paragraphLines.join(" ")
+            // Remove images
+            .replace(/!\[.*?\]\(.*?\)/g, '')
+            // Replace links with just the text
+            .replace(/\[(.*?)\]\(.*?\)/g, "$1")
+            // Remove bold
+            .replace(/(\*\*|__)(.*?)\1/g, "$2")
+            // Remove italic
+            .replace(/(\*|_)(.*?)\1/g, "$2")
+            // Remove inline code
+            .replace(/`([^`]*)`/g, "$1")
+            // Remove HTML tags
+            .replace(/<[^>]+>/g, "")
+            .trim();
+    }
+
     ListModel {
         id: notesList
 
@@ -68,20 +108,25 @@ Page {
         columns: internal.columns
 
         Repeater {
-            model: 3
+            model: notesList
             
             Rectangle {
                 required property int index
+                required property string text
+
+                readonly property string title: extractTitle(text)
 
                 Layout.fillWidth: true
                 //Layout.fillHeight: true
                 //Layout.preferredWidth: 40
                 Layout.preferredHeight: 40
-                color: index % 2 === 0 ? "#5d5b59" : "#1e1b18"
+                //color: index % 2 === 0 ? "#5d5b59" : "#1e1b18"
+                color: palette.midlight
+                radius: 10
                 Label {
                     anchors.centerIn: parent
-                    text: "Item " + (parent.index+1)
-                    color: "white"
+                    text: parent.title
+                    color: palette.text
                 }
             }
         }
