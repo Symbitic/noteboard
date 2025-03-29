@@ -5,8 +5,8 @@ pragma ComponentBehavior: Bound
 
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Controls.Universal
 import QtQuick.Controls.Material
+import QtQuick.Controls.Universal
 import QtQuick.Layouts
 
 ApplicationWindow {
@@ -19,14 +19,14 @@ ApplicationWindow {
     visible: true
 
     background: Rectangle {
-        color: palette.base
+        color: palette.alternateBase
     }
 
     header: ToolBar {
         id: toolbar
 
         background: Rectangle {
-            color: palette.base
+            color: palette.alternateBase
         }
 
         Item {
@@ -35,6 +35,7 @@ ApplicationWindow {
             Label {
                 id: label
                 text: qsTr("Noteboard")
+                color: palette.text
                 font.pixelSize: 20
                 elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignLeft
@@ -79,8 +80,8 @@ ApplicationWindow {
         }
     }
 
-    Universal.theme: Constants.isDarkMode ? Universal.Dark : Universal.Light
     Material.theme: Constants.isDarkMode ? Material.Dark : Material.Light
+    Universal.theme: Constants.isDarkMode ? Universal.Dark : Universal.Light
 
     Shortcut {
         sequences: ["Esc", "Back"]
@@ -120,12 +121,6 @@ ApplicationWindow {
             title: qsTr("Settings")
             page: Constants.View.Settings
             source: "qrc:/qt/qml/Noteboard/qml/SettingsPageContainer.qml"
-            iconName: "settings"
-        }
-        ListElement {
-            title: qsTr("Colors")
-            page: Constants.View.Colors
-            source: "qrc:/qt/qml/Noteboard/qml/ColorsPage.ui.qml"
             iconName: "settings"
         }
         ListElement {

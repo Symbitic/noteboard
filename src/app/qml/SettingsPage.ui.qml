@@ -56,4 +56,64 @@ Page {
             Layout.alignment: Qt.AlignRight
         }
     }
+
+    // Visualize colors for debugging
+    ScrollView {
+        width: root.width
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: grid.bottom
+        anchors.bottom: parent.bottom
+
+        Grid {
+            anchors.fill: parent
+            anchors.margins: 4
+            spacing: 5
+            width: root.width
+            columns: Math.floor(root.width / (190 + 2))
+
+            Repeater {
+                model: [
+                    { title: "palette.window", color: palette.window },
+                    { title: "palette.windowText", color: palette.windowText },
+                    { title: "palette.base", color: palette.base },
+                    { title: "palette.alternateBase", color: palette.alternateBase },
+                    { title: "palette.toolTipBase", color: palette.toolTipBase },
+                    { title: "palette.toolTipText", color: palette.toolTipText },
+                    { title: "palette.placeholderText", color: palette.placeholderText },
+                    { title: "palette.text", color: palette.text },
+                    { title: "palette.button", color: palette.button },
+                    { title: "palette.buttonText", color: palette.buttonText },
+                    { title: "palette.brightText", color: palette.brightText },
+                    { title: "palette.light", color: palette.light },
+                    { title: "palette.dark", color: palette.dark },
+                    { title: "palette.midlight", color: palette.midlight },
+                    { title: "palette.mid", color: palette.mid },
+                    { title: "palette.highlight", color: palette.highlight },
+                    { title: "palette.accent", color: palette.accent },
+                    { title: "palette.link", color: palette.link },
+                ]
+
+                Rectangle {
+                    required property string title
+                    required color
+
+                    readonly property color textColor: Constants.isDarkMode ? Qt.darker(color, 4) : Qt.lighter(color, 4)
+
+                    width: 180
+                    height: 24
+                    border.color: "black"
+                    border.width: 1
+
+                    Label {
+                        id: label
+                        text: parent.title
+                        color: "lightblue"
+                        font.weight: 500
+                        anchors.centerIn: parent
+                    }
+                }
+            }
+        }
+    }
 }

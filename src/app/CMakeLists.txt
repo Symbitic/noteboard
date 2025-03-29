@@ -29,7 +29,6 @@ qt_add_qml_module(noteboard
         qml/AboutPage.ui.qml
         qml/AboutPageContainer.qml
         qml/AppSettings.qml
-        qml/ColorsPage.ui.qml
         qml/Constants.qml
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
