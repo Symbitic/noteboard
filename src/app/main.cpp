@@ -11,7 +11,7 @@ int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
     QGuiApplication::setApplicationName("Noteboard");
-    QGuiApplication::setOrganizationName("N/A");
+    QGuiApplication::setOrganizationName("Noteboard");
 
     QSettings settings;
     const QString style = settings.value("style").toString();
