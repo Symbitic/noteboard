@@ -24,6 +24,7 @@ ApplicationWindow {
 
     header: ToolBar {
         id: toolbar
+        height: label.implicitHeight + 20
 
         background: Rectangle {
             color: palette.alternateBase
@@ -201,10 +202,6 @@ ApplicationWindow {
                     visible: false
                 }
                 PropertyChanges {
-                    target: toolbar
-                    height: 56
-                }
-                PropertyChanges {
                     target: sideMenu
                     visible: true
                     anchors.topMargin: 63
@@ -225,10 +222,6 @@ ApplicationWindow {
                 PropertyChanges {
                     target: drawerButton
                     visible: true
-                }
-                PropertyChanges {
-                    target: toolbar
-                    height: 39
                 }
                 AnchorChanges {
                     target: stackView
