@@ -129,6 +129,12 @@ ApplicationWindow {
             source: "qrc:/qt/qml/RemoteWhiteboard/qml/ColorsPage.ui.qml"
             iconName: "settings"
         }
+        ListElement {
+            title: qsTr("About")
+            page: Constants.View.About
+            source: "qrc:/qt/qml/RemoteWhiteboard/qml/AboutPageContainer.qml"
+            iconName: "info"
+        }
     }
 
     Drawer {

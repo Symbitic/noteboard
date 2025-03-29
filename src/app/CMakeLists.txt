@@ -26,6 +26,8 @@ set_source_files_properties(qml/Constants.qml
 qt_add_qml_module(remote-whiteboard
     URI RemoteWhiteboard
     QML_FILES
+        qml/AboutPage.ui.qml
+        qml/AboutPageContainer.qml
         qml/AppSettings.qml
         qml/ColorsPage.ui.qml
         qml/Constants.qml
@@ -39,6 +41,7 @@ qt_add_qml_module(remote-whiteboard
         qml/SideBar.ui.qml
     RESOURCES
         icons/drawer.svg
+        icons/info.svg
         icons/services.svg
         icons/settings.svg
         icons/sticky.svg

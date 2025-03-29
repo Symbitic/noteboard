@@ -15,6 +15,7 @@ QtObject {
         Services,
         Settings,
         Colors,
+        About,
         Back = -1
     }
     enum Layout {
