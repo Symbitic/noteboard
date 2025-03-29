@@ -3,7 +3,6 @@
 
 import QtQuick
 import QtQuick.Controls
-import Noteboard
 
 SettingsView {
     id: root

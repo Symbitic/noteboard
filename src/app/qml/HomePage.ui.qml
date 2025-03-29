@@ -11,7 +11,6 @@ import QtQml.Models
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
-import Noteboard
 
 Page {
     id: root

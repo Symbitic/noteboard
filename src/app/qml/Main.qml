@@ -8,7 +8,6 @@ import QtQuick.Controls
 import QtQuick.Controls.Universal
 import QtQuick.Controls.Material
 import QtQuick.Layouts
-import Noteboard
 
 ApplicationWindow {
     id: root
