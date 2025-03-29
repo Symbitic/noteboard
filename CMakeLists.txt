@@ -3,9 +3,9 @@
 
 cmake_minimum_required(VERSION 3.16)
 
-project(remote-whiteboard
+project(noteboard
     VERSION "0.0.0"
-    DESCRIPTION "Remote Whiteboard"
+    DESCRIPTION "Noteboard"
     LANGUAGES CXX C
 )
 

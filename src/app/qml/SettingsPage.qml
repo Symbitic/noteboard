@@ -3,7 +3,7 @@
 
 import QtQuick
 import QtQuick.Controls
-import RemoteWhiteboard
+import Noteboard
 
 SettingsView {
     id: root

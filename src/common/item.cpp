@@ -3,8 +3,6 @@
 
 #include "item.h"
 
-using namespace RemoteWhiteboard;
-
 Item::Item(const QString &text, QObject *parent) : QObject(parent), m_text(text) { }
 
 Item::Item(QObject *parent) : QObject(parent), m_text() { }

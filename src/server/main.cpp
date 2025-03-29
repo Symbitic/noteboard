@@ -9,7 +9,7 @@ using namespace Qt::StringLiterals;
 
 int main(int argc, char *argv[])
 {
-    QCoreApplication::setApplicationName(u"Remote Whiteboard server"_s);
+    QCoreApplication::setApplicationName(u"Noteboard server"_s);
 
     QCoreApplication app(argc, argv);
 

@@ -6,9 +6,9 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 */
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Layouts
 import QtQuick.Effects
-import RemoteWhiteboard
+import QtQuick.Layouts
+import Noteboard
 
 Column {
     id: root
@@ -68,7 +68,7 @@ Column {
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                             ToolButton {
-                                icon.source: `qrc:/qt/qml/RemoteWhiteboard/icons/${columnItem.iconName}.svg`
+                                icon.source: `qrc:/qt/qml/Noteboard/icons/${columnItem.iconName}.svg`
                                 icon.width: 34
                                 icon.height: 34
                                 icon.color: palette.buttonText

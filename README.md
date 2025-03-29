@@ -1,4 +1,4 @@
-# NoteBoard
+# Noteboard
 
 A cross-platform app for visualizing bulletin boards/TODO lists.
 

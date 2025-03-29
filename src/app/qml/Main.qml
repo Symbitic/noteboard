@@ -8,7 +8,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Universal
 import QtQuick.Controls.Material
 import QtQuick.Layouts
-import RemoteWhiteboard
+import Noteboard
 
 ApplicationWindow {
     id: root
@@ -92,7 +92,7 @@ ApplicationWindow {
     Action {
         id: drawerAction
         icon.name: "drawer"
-        icon.source: "qrc:/qt/qml/RemoteWhiteboard/icons/drawer.svg"
+        icon.source: "qrc:/qt/qml/Noteboard/icons/drawer.svg"
         icon.color: palette.buttonText
         onTriggered: drawer.open()
     }
@@ -108,31 +108,31 @@ ApplicationWindow {
         ListElement {
             title: qsTr("Notes")
             page: Constants.View.Home
-            source: "qrc:/qt/qml/RemoteWhiteboard/qml/HomePageContainer.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/HomePageContainer.qml"
             iconName: "sticky"
         }
         ListElement {
             title: qsTr("Services")
             page: Constants.View.Services
-            source: "qrc:/qt/qml/RemoteWhiteboard/qml/ServicesPage.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/ServicesPage.qml"
             iconName: "services"
         }
         ListElement {
             title: qsTr("Settings")
             page: Constants.View.Settings
-            source: "qrc:/qt/qml/RemoteWhiteboard/qml/SettingsPage.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/SettingsPage.qml"
             iconName: "settings"
         }
         ListElement {
             title: qsTr("Colors")
             page: Constants.View.Colors
-            source: "qrc:/qt/qml/RemoteWhiteboard/qml/ColorsPage.ui.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/ColorsPage.ui.qml"
             iconName: "settings"
         }
         ListElement {
             title: qsTr("About")
             page: Constants.View.About
-            source: "qrc:/qt/qml/RemoteWhiteboard/qml/AboutPageContainer.qml"
+            source: "qrc:/qt/qml/Noteboard/qml/AboutPageContainer.qml"
             iconName: "info"
         }
     }

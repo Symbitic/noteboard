@@ -10,7 +10,7 @@
 int main(int argc, char *argv[])
 {
     QGuiApplication app(argc, argv);
-    QGuiApplication::setApplicationName("Remote Whiteboard");
+    QGuiApplication::setApplicationName("Noteboard");
     QGuiApplication::setOrganizationName("N/A");
 
     QSettings settings;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[])
     QObject::connect(&engine, &QQmlApplicationEngine::quit, &app, &QGuiApplication::quit);
 
     engine.setInitialProperties({ { "builtInStyles", builtInStyles } });
-    engine.loadFromModule("RemoteWhiteboard", "Main");
+    engine.loadFromModule("Noteboard", "Main");
     if (engine.rootObjects().isEmpty()) {
         exit(EXIT_FAILURE);
     }
