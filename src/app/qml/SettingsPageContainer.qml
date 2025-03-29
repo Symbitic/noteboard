@@ -52,12 +52,12 @@ SettingsPage {
         ListElement {
             name: qsTr("Light")
             theme: Constants.Theme.Light
-            supported: (currentStyle) => !["Basic"].includes(currentStyle)
+            supported: (currentStyle) => ["Material", "Universal"].includes(currentStyle)
         }
         ListElement {
             name: qsTr("Dark")
             theme: Constants.Theme.Dark
-            supported: (currentStyle) => !["Basic"].includes(currentStyle)
+            supported: (currentStyle) => ["Material", "Universal"].includes(currentStyle)
         }
     }
 }
