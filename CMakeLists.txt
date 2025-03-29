@@ -16,8 +16,8 @@ option(ENABLE_GUI "Build the GUI" ON)
 option(ENABLE_SERVER "Build the server" ON)
 
 find_package(Qt6 CONFIG REQUIRED COMPONENTS Core Gui Network)
-find_package(Qt6 CONFIG OPTIONAL_COMPONENTS HttpServer Quick QuickControls2)
-qt_standard_project_setup(REQUIRES 6.8)
+find_package(Qt6 CONFIG OPTIONAL_COMPONENTS HttpServer LinguistTools Quick QuickControls2)
+qt_standard_project_setup(REQUIRES 6.8 I18N_TRANSLATED_LANGUAGES en en_AU fr)
 
 if(NOT ENABLE_GUI AND NOT ENABLE_SERVER)
     message(NOTICE "No build targets have been enabled.")

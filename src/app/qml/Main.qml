@@ -36,10 +36,10 @@ ApplicationWindow {
                 id: label
                 text: qsTr("Noteboard")
                 color: palette.text
-                font.pixelSize: 20
                 elide: Label.ElideRight
                 horizontalAlignment: Qt.AlignLeft
                 verticalAlignment: Qt.AlignVCenter
+                font.pixelSize: 20
                 anchors.horizontalCenter: parent.horizontalCenter
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.margins: 0

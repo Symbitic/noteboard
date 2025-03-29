@@ -46,6 +46,12 @@ qt_add_qml_module(noteboard
         icons/sticky.svg
 )
 
+qt_add_translations(noteboard
+    RESOURCE_PREFIX /qt/qml/Noteboard/i18n
+    TS_FILE_BASE qml
+    TS_FILE_DIR i18n
+)
+
 target_link_libraries(noteboard PRIVATE
     common
     Qt::Gui
