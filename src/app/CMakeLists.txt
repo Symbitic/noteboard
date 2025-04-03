@@ -33,6 +33,7 @@ qt_add_qml_module(noteboard
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
         qml/Main.qml
+        qml/NoteCard.ui.qml
         qml/ServicesPage.ui.qml
         qml/ServicesPageContainer.qml
         qml/SettingsPage.ui.qml

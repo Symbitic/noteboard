@@ -77,19 +77,12 @@ HomePage {
     property url notesFolder: `${StandardPaths.writableLocation(StandardPaths.DocumentsLocation)}/Notes`
 
     model: notesList
-    note: Rectangle {
+
+    note: NoteCard {
         required property string text
-        readonly property string title: extractTitle(text)
-
-        color: palette.midlight
-        radius: 10
-        Layout.fillWidth: true
-        Layout.preferredHeight: 40
-
-        Label {
-            anchors.centerIn: parent
-            text: parent.title
-            color: palette.text
-        }
+        title: extractTitle(text)
+        Layout.preferredHeight: content.implicitHeight
+        Layout.minimumWidth: 270
+        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
     }
 }

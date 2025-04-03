@@ -22,39 +22,6 @@ Page {
     rightPadding: 27
     bottomPadding: 13
 
-    Label {
-        id: title
-
-        width: root.width
-        visible: internal.showTitle
-        text: qsTr("Notes")
-        font: Constants.largeFont
-        elide: Text.ElideRight
-    }
-
-    GridLayout {
-        id: grid
-
-        anchors.left: parent.left
-        anchors.right: parent.right
-        anchors.top: title.bottom
-        anchors.topMargin: 10
-        rowSpacing: 20
-        columnSpacing: 20
-        columns: internal.columns
-
-        Repeater {
-            id: repeater
-        }
-    }
-
-    QtObject {
-        id: internal
-
-        property int columns: 1
-        property bool showTitle: false
-    }
-
     states: [
         State {
             name: "desktopLayout"
@@ -62,7 +29,6 @@ Page {
 
             PropertyChanges {
                 target: internal
-                columns: 3
                 showTitle: true
             }
             AnchorChanges {
@@ -76,7 +42,6 @@ Page {
 
             PropertyChanges {
                 target: internal
-                columns: 1
                 showTitle: false
             }
             AnchorChanges {
@@ -85,4 +50,44 @@ Page {
             }
         }
     ]
+
+    QtObject {
+        id: internal
+
+        property bool showTitle: false
+    }
+
+    Label {
+        id: title
+
+        width: root.width
+        visible: internal.showTitle
+        text: qsTr("Notes")
+        font: Constants.largeFont
+        elide: Text.ElideRight
+    }
+
+    GridLayout {
+        id: grid
+
+        width: parent.width
+        anchors.topMargin: 10
+        rowSpacing: 10
+        columnSpacing: 10
+        columns: Math.max(Math.floor(root.width / (270+10)), 1)
+
+        Repeater {
+            id: repeater
+        }
+    }
+
+    RoundButton {
+        text: qsTr("+")
+        anchors.right: parent.right
+        anchors.rightMargin: 0
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 0
+        onClicked: {
+        }
+    }
 }
