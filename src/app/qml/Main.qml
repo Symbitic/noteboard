@@ -8,6 +8,7 @@ import QtQuick.Controls
 import QtQuick.Controls.Material
 import QtQuick.Controls.Universal
 import QtQuick.Layouts
+import noteboard.common
 
 ApplicationWindow {
     id: root
@@ -83,6 +84,10 @@ ApplicationWindow {
 
     Material.theme: Constants.isDarkMode ? Material.Dark : Material.Light
     Universal.theme: Constants.isDarkMode ? Universal.Dark : Universal.Light
+
+    Board {
+        id: board
+    }
 
     Shortcut {
         sequences: ["Esc", "Back"]
