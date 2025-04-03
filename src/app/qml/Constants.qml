@@ -14,7 +14,6 @@ QtObject {
         Home,
         Services,
         Settings,
-        Colors,
         About,
         Back = -1
     }
