@@ -18,58 +18,26 @@ ApplicationWindow {
     minimumHeight: 600
     minimumWidth: 270
     visible: true
-
+    header: toolbar
     background: Rectangle {
         color: palette.alternateBase
     }
 
-    header: ToolBar {
-        id: toolbar
-        height: label.implicitHeight + 20
-
-        background: Rectangle {
-            color: palette.alternateBase
-        }
-
-        Item {
-            anchors.fill: parent
-
-            Label {
-                id: label
-                text: qsTr("Noteboard")
-                color: palette.text
-                elide: Label.ElideRight
-                horizontalAlignment: Qt.AlignLeft
-                verticalAlignment: Qt.AlignVCenter
-                font.pixelSize: 20
-                anchors.horizontalCenter: parent.horizontalCenter
-                anchors.verticalCenter: parent.verticalCenter
-                anchors.margins: 0
-            }
-
-            ToolButton {
-                id: drawerButton
-                action: drawerAction
-                anchors.right: parent.right
-                anchors.verticalCenter: parent.verticalCenter
-            }
-        }
-    }
-
     property list<string> builtInStyles
+    // Map of page names to properties to pass to stackView.
+    // This was the most delarative method since QML doesn't have key-value objects.
+    readonly property variant propertiesMap: ({
+        [Constants.View.Settings]: {
+            builtInStyles: builtInStyles
+        }
+    })
 
     function navigate(view: int, source: string) {
         if (view === Constants.currentView) {
             return;
         }
 
-        // Map of page names to properties to pass
-        const propertiesMap = {
-            [Constants.View.Settings]: {
-                "builtInStyles": root.builtInStyles
-            }
-        };
-        const properties = propertiesMap[view] || {};
+        const properties = root.propertiesMap[view] || {};
 
         switch (view) {
             case Constants.View.Back:
@@ -93,6 +61,20 @@ ApplicationWindow {
         sequences: ["Esc", "Back"]
         enabled: stackView.depth > 1
         onActivated: navigate(Constants.View.Back)
+    }
+
+    Action {
+        id: backAction
+        enabled: stackView.depth > 1
+        icon.name: stackView.depth > 1 ? "back" : ""
+        icon.source: stackView.depth > 1 ? "../icons/back.svg" : ""
+        icon.color: palette.buttonText
+        onTriggered: {
+            if (stackView.depth > 1) {
+                stackView.pop()
+                listView.currentIndex = -1
+            }
+        }
     }
 
     Action {
@@ -134,6 +116,46 @@ ApplicationWindow {
             page: Constants.View.About
             source: "qrc:/qt/qml/Noteboard/qml/AboutPageContainer.qml"
             iconName: "info"
+        }
+    }
+
+    ToolBar {
+        id: toolbar
+        height: label.implicitHeight + 20
+
+        background: Rectangle {
+            color: palette.alternateBase
+        }
+
+        Item {
+            anchors.fill: parent
+
+            ToolButton {
+                id: backButton
+                action: backAction
+                anchors.left: parent.left
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            Label {
+                id: label
+                text: qsTr("Noteboard")
+                color: palette.text
+                elide: Label.ElideRight
+                horizontalAlignment: Qt.AlignLeft
+                verticalAlignment: Qt.AlignVCenter
+                font.pixelSize: 20
+                anchors.horizontalCenter: parent.horizontalCenter
+                anchors.verticalCenter: parent.verticalCenter
+                anchors.margins: 0
+            }
+
+            ToolButton {
+                id: drawerButton
+                action: drawerAction
+                anchors.right: parent.right
+                anchors.verticalCenter: parent.verticalCenter
+            }
         }
     }
 
@@ -199,9 +221,13 @@ ApplicationWindow {
     StateGroup {
         states: [
             State {
-                name: "desktopLayout"
+                name: "desktop"
                 when: Constants.layout === Constants.Layout.Desktop
 
+                PropertyChanges {
+                    target: backButton
+                    visible: false
+                }
                 PropertyChanges {
                     target: drawerButton
                     visible: false
@@ -209,7 +235,6 @@ ApplicationWindow {
                 PropertyChanges {
                     target: sideMenu
                     visible: true
-                    anchors.topMargin: 63
                 }
                 AnchorChanges {
                     target: stackView
@@ -217,12 +242,16 @@ ApplicationWindow {
                 }
             },
             State {
-                name: "mobileLayout"
+                name: "mobile"
                 when: Constants.layout === Constants.Layout.Mobile
 
                 PropertyChanges {
                     target: sideMenu
                     visible: false
+                }
+                PropertyChanges {
+                    target: backButton
+                    visible: true
                 }
                 PropertyChanges {
                     target: drawerButton
@@ -236,5 +265,17 @@ ApplicationWindow {
         ]
     }
 
-    Component.onCompleted: Constants.init(root)
+    Connections {
+        target: stackView.currentItem
+        ignoreUnknownSignals: true
+
+        function onServiceClicked(service: string, title: string) {
+            stackView.pushItem(Qt.resolvedUrl("services/%1.qml".arg(service)))
+        }
+    }
+
+    Component.onCompleted: {
+        Constants.init(root)
+        navigate(Constants.View.Services, "qrc:/qt/qml/Noteboard/qml/ServicesPageContainer.qml")
+    }
 }

@@ -26,6 +26,7 @@ set_source_files_properties(qml/Constants.qml
 qt_add_qml_module(noteboard
     URI Noteboard
     QML_FILES
+        qml/services/SamsungFrame.qml
         qml/AboutPage.ui.qml
         qml/AboutPageContainer.qml
         qml/AppSettings.qml
@@ -40,6 +41,8 @@ qt_add_qml_module(noteboard
         qml/SettingsPageContainer.qml
         qml/SideBar.ui.qml
     RESOURCES
+        icons/services/SamsungFrame.svg
+        icons/back.svg
         icons/drawer.svg
         icons/info.svg
         icons/services.svg
