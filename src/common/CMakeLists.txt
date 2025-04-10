@@ -7,7 +7,7 @@ qt_add_qml_module(common
     SOURCES
         board.cpp board.h
         item.cpp item.h
-        multicast.cpp multicast.h
+        ssdp.cpp ssdp.h
 )
 target_link_libraries(common PRIVATE Qt::Core Qt::Network Qt::Quick)
 target_include_directories(common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
