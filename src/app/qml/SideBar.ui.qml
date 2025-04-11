@@ -30,6 +30,7 @@ Column {
             required property string iconName
             required property string source
             required property int page
+            required property ListModel subpages
 
             readonly property bool active: currentPage === columnItem.page
             readonly property color backgroundColor: palette.highlight
@@ -44,6 +45,11 @@ Column {
                 opacity: 0.1
             }
 
+            Component.onCompleted: {
+                iconButton.clicked.connect(columnItem.clicked);
+                arrowIcon.clicked.connect(columnItem.clicked);
+            }
+
             Column {
                 id: column
                 padding: 0
@@ -53,7 +59,6 @@ Column {
 
                     width: 290
                     height: 60
-                    visible: true
 
                     RowLayout {
                         anchors.fill: parent
@@ -67,11 +72,16 @@ Column {
                             Layout.alignment: Qt.AlignHCenter | Qt.AlignVCenter
 
                             ToolButton {
+                                id: iconButton
                                 icon.source: `qrc:/qt/qml/Noteboard/icons/${columnItem.iconName}.svg`
                                 icon.width: 34
                                 icon.height: 34
                                 icon.color: palette.buttonText
                                 padding: 0
+                                down: true
+                                background: Rectangle {
+                                    color: "transparent"
+                                }
                             }
                         }
 
@@ -82,6 +92,59 @@ Column {
                             font.pixelSize: 18
                             font.weight: 600
                             Layout.fillWidth: true
+                        }
+
+                        ToolButton {
+                            id: arrowIcon
+
+                            icon.source: columnItem.active
+                                ? Qt.resolvedUrl("../icons/arrow-down.svg")
+                                : Qt.resolvedUrl("../icons/arrow.svg")
+                            icon.width: 25
+                            icon.height: 25
+                            icon.color: "white"
+                            padding: 0
+                            flat: true
+                            down: true
+                            background: Rectangle {
+                                color: "transparent"
+                            }
+                            visible: columnItem.subpages.count > 0
+                            Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
+                        }
+                    }
+                }
+
+                ListView {
+                    id: subpagesView
+                    model: columnItem.subpages
+                    width: parent.width
+                    height: columnItem.subpages.count > 0 ? contentHeight : 0
+                    visible: columnItem.active
+                    delegate: ItemDelegate {
+                        id: delegate
+                        required property string title
+                        required property string iconName
+                        required property string source
+                        width: parent.width
+                        height: 44
+
+                        onClicked: root.itemClicked(columnItem.page, Qt.resolvedUrl(delegate.source))
+
+                        RowLayout {
+                            width: 190
+                            spacing: 6
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.horizontalCenter: parent.horizontalCenter
+
+                            Image {
+                                source: Qt.resolvedUrl("../icons/%1.svg".arg(delegate.iconName))
+                            }
+
+                            Label {
+                                text: delegate.title
+                                Layout.fillWidth: true
+                            }
                         }
                     }
                 }

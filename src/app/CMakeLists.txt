@@ -42,6 +42,8 @@ qt_add_qml_module(noteboard
         qml/SideBar.ui.qml
     RESOURCES
         icons/services/SamsungFrame.svg
+        icons/arrow-down.svg
+        icons/arrow.svg
         icons/back.svg
         icons/drawer.svg
         icons/info.svg

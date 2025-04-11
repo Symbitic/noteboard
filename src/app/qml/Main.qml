@@ -23,6 +23,7 @@ ApplicationWindow {
         color: palette.alternateBase
     }
 
+    property string lastSource: ""
     property list<string> builtInStyles
     // Map of page names to properties to pass to stackView.
     // This was the most delarative method since QML doesn't have key-value objects.
@@ -33,7 +34,7 @@ ApplicationWindow {
     })
 
     function navigate(view: int, source: string) {
-        if (view === Constants.currentView) {
+        if (view === Constants.currentView && source === root.lastSource) {
             return;
         }
 
@@ -45,6 +46,7 @@ ApplicationWindow {
                 break;
             default:
                 Constants.currentView = view;
+                root.lastSource = source;
                 stackView.pushItem(source, properties);
                 break;
         }
@@ -98,24 +100,34 @@ ApplicationWindow {
             page: Constants.View.Home
             source: "qrc:/qt/qml/Noteboard/qml/HomePageContainer.qml"
             iconName: "sticky"
+            subpages: []
         }
         ListElement {
             title: qsTr("Services")
             page: Constants.View.Services
             source: "qrc:/qt/qml/Noteboard/qml/ServicesPageContainer.qml"
             iconName: "services"
+            subpages: [
+                ListElement {
+                    title: qsTr("Samsung Frame")
+                    source: "services/SamsungFrame.qml"
+                    iconName: "services/SamsungFrame"
+                }
+            ]
         }
         ListElement {
             title: qsTr("Settings")
             page: Constants.View.Settings
             source: "qrc:/qt/qml/Noteboard/qml/SettingsPageContainer.qml"
             iconName: "settings"
+            subpages: []
         }
         ListElement {
             title: qsTr("About")
             page: Constants.View.About
             source: "qrc:/qt/qml/Noteboard/qml/AboutPageContainer.qml"
             iconName: "info"
+            subpages: []
         }
     }
 
