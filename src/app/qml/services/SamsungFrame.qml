@@ -1,17 +1,73 @@
 // Copyright (C) 2025 Alex Shaw <alex.shaw.as@gmail.com>
 // SPDX-License-Identifier: AGPL-3.0-only
 
+import QtCore
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Effects
 import QtQuick.Layouts
 import noteboard.common
 
-Page {
+Pane {
     id: root
+
+    readonly property string restUrl: "http://%1:8001/api/v2/"
+
+    function connectToDevice(ip: string) {
+        const url = restUrl.arg(ip);
+        const request = new XMLHttpRequest();
+        request.onreadystatechange = () => {
+            if (request.readyState !== XMLHttpRequest.DONE || request.status !== 200) {
+                return;
+            }
+            let responseObj = {};
+            try {
+                responseObj = JSON.parse(request.responseText);
+            } catch (_) {
+                responseObj = {};
+            }
+            if (!responseObj || !responseObj.device || responseObj.device["FrameTVSupport"] !== "true") {
+                return;
+            }
+
+            settings.ip = ip;
+            connectedLabel.connected = true;
+            connectButton.enabled = false;
+            if (responseObj.device["wifiMac"].length > 0) {
+                macField.text = responseObj.device["wifiMac"];
+                settings.mac = responseObj.device["wifiMac"];
+            }
+        }
+        request.open("GET", url);
+        request.send();
+    }
+
+    Settings {
+        id: settings
+        category: "SamsungFrame"
+        property string ip: ""
+        property string mac: ""
+        property alias autoscan: scanSwitch.checked
+    }
 
     ListModel {
         id: devicesModel
+    }
+
+    Connections {
+        target: scanSwitch
+
+        function onCheckedChanged() {
+            if (scanSwitch.checked) {
+                ssdp.start();
+                noDevicesTimer.start();
+            } else {
+                ssdp.stop();
+                noDevicesTimer.stop();
+                noDevicesMessage.visible = false;
+                devicesModel.clear();
+            }
+        }
     }
 
     SSDP {
@@ -51,19 +107,12 @@ Page {
     }
 
     Timer {
-        id: startupTimer
-        interval: 1000
-        running: true
+        id: noDevicesTimer
+        interval: 3000
         repeat: false
-        onTriggered: ssdp.start()
-    }
-
-    Timer {
-        id: stopTimer
-        interval: 10000
-        running: true
-        repeat: false
-        onTriggered: ssdp.stop()
+        onTriggered: {
+            noDevicesMessage.visible = Qt.binding(() => devicesModel.count === 0)
+        }
     }
 
     GridLayout {
@@ -72,20 +121,87 @@ Page {
         columns: 2
 
         Label {
+            text: qsTr("Samsung Frame")
+            horizontalAlignment: Label.AlignHCenter
+            padding: 0
+            font.pixelSize: Constants.largeFont.pixelSize
+            Layout.margins: 0
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+        }
+
+        Label {
+            id: connectedLabel
+            text: connected ? qsTr("Status: <font color=\"#00FF00\">Connected</font>") : qsTr("Status: <font color=\"#FF0000\">Not connected</font>")
+            textFormat: Label.StyledText
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+
+            property bool connected: false
+        }
+
+        Label {
             text: qsTr("IP:")
         }
 
         TextField {
             id: ipField
+            text: settings.ip
             placeholderText: qsTr("<IP Address>")
             inputMethodHints: Qt.ImhUrlCharactersOnly
             Layout.fillWidth: true
         }
 
         Label {
-            text: qsTr("Found devices:")
+            text: qsTr("MAC Address:")
+        }
+
+        TextField {
+            id: macField
+            text: settings.mac
+            placeholderText: qsTr("<Optional MAC Address>")
+            inputMethodHints: Qt.ImhUrlCharactersOnly
+            Layout.fillWidth: true
+        }
+
+        RoundButton {
+            id: connectButton
+            enabled: ipField.length >= 7
+            text: qsTr("Connect")
+            radius: 5
+            onClicked: connectToDevice(ipField.text)
+            Layout.bottomMargin: 10
             Layout.columnSpan: 2
             Layout.fillWidth: true
+        }
+
+        Label {
+            text: qsTr("Scan for TVs:")
+            Layout.fillWidth: true
+        }
+
+        Switch {
+            id: scanSwitch
+            checked: true
+            Layout.alignment: Qt.AlignRight
+        }
+
+        Rectangle {
+            id: noDevicesMessage
+            visible: false
+            color: palette.button
+            opacity: 1
+            radius: 5
+            Layout.columnSpan: 2
+            Layout.fillWidth: true
+            Layout.preferredHeight: noDevicesLabel.implicitHeight + 20
+
+            Label {
+                id: noDevicesLabel
+                text: qsTr("No devices found")
+                font.bold: true
+                anchors.centerIn: parent
+            }
         }
 
         ListView {
@@ -132,6 +248,27 @@ Page {
                     }
                 }
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (settings.mac) {
+            WakeOnLAN.sendPacket(settings.mac);
+        }
+
+        if (settings.ip) {
+            root.connectToDevice(settings.ip);
+        }
+
+        if (scanSwitch.checked) {
+            ssdp.start();
+            noDevicesTimer.start();
+        }
+    }
+
+    Component.onDestruction: {
+        if (ssdp.running) {
+            ssdp.stop();
         }
     }
 }
