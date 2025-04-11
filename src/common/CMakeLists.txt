@@ -8,6 +8,7 @@ qt_add_qml_module(common
         board.cpp board.h
         item.cpp item.h
         ssdp.cpp ssdp.h
+        wakeonlan.cpp wakeonlan.h
 )
 target_link_libraries(common PRIVATE Qt::Core Qt::Network Qt::Quick)
 target_include_directories(common INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
