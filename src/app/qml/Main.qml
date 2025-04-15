@@ -9,6 +9,7 @@ import QtQuick.Controls.Material
 import QtQuick.Controls.Universal
 import QtQuick.Layouts
 import noteboard.common
+import Noteboard.Services
 
 ApplicationWindow {
     id: root
@@ -25,20 +26,25 @@ ApplicationWindow {
 
     property string lastSource: ""
     property list<string> builtInStyles
+
     // Map of page names to properties to pass to stackView.
-    // This was the most delarative method since QML doesn't have key-value objects.
+    // This was the most delarative method since ListModel doesn't have key-value objects.
     readonly property variant propertiesMap: ({
+        [Constants.View.Services]: {
+            servicesList: services
+        },
         [Constants.View.Settings]: {
             builtInStyles: builtInStyles
         }
     })
 
-    function navigate(view: int, source: string) {
+    function navigate(view: int, source: string, params: variant): void {
         if (view === Constants.currentView && source === root.lastSource) {
             return;
         }
 
-        const properties = root.propertiesMap[view] || {};
+        // Pass hard-coded props and dynamic params from SideBar to StackView.
+        const properties = params || propertiesMap[view] || {};
 
         switch (view) {
             case Constants.View.Back:
@@ -57,6 +63,10 @@ ApplicationWindow {
 
     Board {
         id: board
+    }
+
+    ServicesList {
+        id: services
     }
 
     Shortcut {
@@ -100,34 +110,24 @@ ApplicationWindow {
             page: Constants.View.Home
             source: "qrc:/qt/qml/Noteboard/qml/HomePageContainer.qml"
             iconName: "sticky"
-            subpages: []
         }
         ListElement {
             title: qsTr("Services")
             page: Constants.View.Services
             source: "qrc:/qt/qml/Noteboard/qml/ServicesPageContainer.qml"
             iconName: "services"
-            subpages: [
-                ListElement {
-                    title: qsTr("Samsung Frame")
-                    source: "services/SamsungFrame.qml"
-                    iconName: "services/SamsungFrame"
-                }
-            ]
         }
         ListElement {
             title: qsTr("Settings")
             page: Constants.View.Settings
             source: "qrc:/qt/qml/Noteboard/qml/SettingsPageContainer.qml"
             iconName: "settings"
-            subpages: []
         }
         ListElement {
             title: qsTr("About")
             page: Constants.View.About
             source: "qrc:/qt/qml/Noteboard/qml/AboutPageContainer.qml"
             iconName: "info"
-            subpages: []
         }
     }
 
@@ -219,7 +219,10 @@ ApplicationWindow {
 
         menuOptions: menuItems
         currentPage: Constants.currentView
-        onItemClicked: (page, source) => navigate(page, source)
+        services: services.model
+        onItemClicked: (page, source, params) => {
+            navigate(page, source, params)
+        }
     }
 
     StackView {
@@ -281,8 +284,8 @@ ApplicationWindow {
         target: stackView.currentItem
         ignoreUnknownSignals: true
 
-        function onServiceClicked(service: string, title: string) {
-            stackView.pushItem(Qt.resolvedUrl("services/%1.qml".arg(service)))
+        function onServiceClicked(service: QtObject) {
+            navigate(Constants.View.Services, service.pageUrl, { service });
         }
     }
 

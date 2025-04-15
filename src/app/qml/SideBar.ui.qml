@@ -1,3 +1,6 @@
+// Copyright (C) 2025 Alex Shaw <alex.shaw.as@gmail.com>
+// SPDX-License-Identifier: AGPL-3.0-only
+
 /*
 This is a UI file (.ui.qml) that is intended to be edited in Qt Design Studio only.
 It is supposed to be strictly declarative and only uses a subset of QML. If you edit
@@ -6,15 +9,16 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 */
 import QtQuick
 import QtQuick.Controls
-import QtQuick.Effects
 import QtQuick.Layouts
+import Noteboard.Services
 
 Column {
     id: root
 
     property alias menuOptions: repeater.model
     property int currentPage
-    signal itemClicked(int item, source: string)
+    property list<ServiceBase> services: []
+    signal itemClicked(int item, string source, variant params)
 
     leftPadding: 5
     spacing: 5
@@ -30,13 +34,13 @@ Column {
             required property string iconName
             required property string source
             required property int page
-            required property ListModel subpages
 
             readonly property bool active: currentPage === columnItem.page
             readonly property color backgroundColor: palette.highlight
 
             width: column.width
             height: column.height
+            onClicked: itemClicked(page, source, undefined)
 
             background: Rectangle {
                 color: active ? backgroundColor : "transparent"
@@ -109,7 +113,7 @@ Column {
                             background: Rectangle {
                                 color: "transparent"
                             }
-                            visible: columnItem.subpages.count > 0
+                            visible: columnItem.page === Constants.View.Services
                             Layout.alignment: Qt.AlignRight | Qt.AlignVCenter
                         }
                     }
@@ -117,19 +121,21 @@ Column {
 
                 ListView {
                     id: subpagesView
-                    model: columnItem.subpages
+                    model: (columnItem.page === Constants.View.Services) ? root.services : []
                     width: parent.width
-                    height: columnItem.subpages.count > 0 ? contentHeight : 0
-                    visible: columnItem.active
+                    height: contentHeight
+                    visible: columnItem.active && model.length > 0
                     delegate: ItemDelegate {
                         id: delegate
-                        required property string title
-                        required property string iconName
-                        required property string source
-                        width: parent.width
+                        width: subpagesView.width
                         height: 44
-
-                        onClicked: root.itemClicked(columnItem.page, Qt.resolvedUrl(delegate.source))
+                        required property QtObject model
+                        readonly property string name: model.modelData.name
+                        readonly property url iconUrl: model.modelData.iconUrl
+                        readonly property url pageUrl: model.modelData.pageUrl
+                        onClicked: root.itemClicked(columnItem.page, delegate.pageUrl, {
+                            service: model.modelData
+                        })
 
                         RowLayout {
                             width: 190
@@ -138,20 +144,16 @@ Column {
                             anchors.horizontalCenter: parent.horizontalCenter
 
                             Image {
-                                source: Qt.resolvedUrl("../icons/%1.svg".arg(delegate.iconName))
+                                source: delegate.iconUrl
                             }
 
                             Label {
-                                text: delegate.title
+                                text: delegate.name
                                 Layout.fillWidth: true
                             }
                         }
                     }
                 }
-            }
-
-            onClicked: {
-                itemClicked(columnItem.page, columnItem.source)
             }
         }
     }

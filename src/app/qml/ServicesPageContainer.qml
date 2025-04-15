@@ -4,13 +4,10 @@
 import QtQml.Models
 import QtQuick
 import QtQuick.Controls
+import Noteboard.Services
 
 ServicesPage {
-    services: ListModel {
-        ListElement {
-            title: qsTr("Samsung Frame")
-            description: qsTr("Use a Samsung Frame TV as your noteboard")
-            service: "SamsungFrame"
-        }
-    }
+    required property ServicesList servicesList
+
+    services: servicesList.model
 }

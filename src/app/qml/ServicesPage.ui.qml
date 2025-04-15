@@ -10,13 +10,16 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import Noteboard.Services
 
 Page {
     id: root
 
-    signal serviceClicked(service: string, title: string)
-
+    property int cellSize: 200
+    property int gridSpacing: 8
     property alias services: repeater.model
+
+    signal serviceClicked(service: QtObject)
 
     states: [
         State {
@@ -42,12 +45,9 @@ Page {
         id: grid
         anchors.fill: parent
         anchors.margins: 10
-        columns: Math.max(1, Math.floor((width + gridSpacing) / (rectSize + gridSpacing)))
+        columns: Math.max(1, Math.floor((width + gridSpacing) / (cellSize + gridSpacing)))
         rowSpacing: gridSpacing
         columnSpacing: gridSpacing
-
-        property int gridSpacing: 8
-        property int rectSize: 200
 
         Label {
             id: title
@@ -62,14 +62,14 @@ Page {
             id: repeater
 
             Rectangle {
-                required property string title
-                required property string description
-                required property string service
+                required property QtObject model
+                readonly property string name: model.name
+                readonly property url iconUrl: model.iconUrl
 
                 color: Qt.lighter(palette.highlight)
                 radius: width / 10
-                Layout.preferredWidth: grid.rectSize
-                Layout.preferredHeight: grid.rectSize
+                Layout.preferredWidth: cellSize
+                Layout.preferredHeight: cellSize
                 Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
 
                 ToolButton {
@@ -77,9 +77,9 @@ Page {
 
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: parent.top
-                    icon.source: Qt.resolvedUrl(`../icons/services/${parent.service}.svg`)
-                    icon.width: grid.rectSize - 40
-                    icon.height: grid.rectSize - 40
+                    icon.source: parent.iconUrl
+                    icon.width: parent.width - 40
+                    icon.height: parent.height - 40
                     icon.color: "white"
                     padding: 0
                     flat: true
@@ -91,7 +91,7 @@ Page {
                 }
 
                 Label {
-                    text: parent.title
+                    text: parent.name
                     color: "white"
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.top: icon.bottom
@@ -101,7 +101,7 @@ Page {
 
                 MouseArea {
                     anchors.fill: parent
-                    onClicked: root.serviceClicked(parent.service, parent.title)
+                    onClicked: root.serviceClicked(parent.model)
                 }
             }
         }

@@ -2,6 +2,7 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 add_subdirectory(common)
+add_subdirectory(services)
 
 if(ENABLE_GUI)
     add_subdirectory(app)
