@@ -17,10 +17,14 @@ Page {
 
     property int cellSize: 200
     property int gridSpacing: 8
+    readonly property int columnCount: Math.max(1, Math.floor((root.availableWidth + gridSpacing) / (cellSize + gridSpacing)))
+    readonly property int rowWidth: (cellSize * columnCount) + (gridSpacing * (columnCount - 1))
+    readonly property int gridMargin: Math.max(0, Math.floor((root.availableWidth - rowWidth) / 2))
     property alias services: repeater.model
 
     signal serviceClicked(service: QtObject)
 
+    padding: 10
     states: [
         State {
             name: "desktop"
@@ -28,7 +32,7 @@ Page {
 
             PropertyChanges {
                 target: title
-                Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+                horizontalAlignment: Label.AlignLeft
             }
         },
         State {
@@ -36,72 +40,82 @@ Page {
 
             PropertyChanges {
                 target: title
-                Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+                horizontalAlignment: Label.AlignHCenter
             }
         }
     ]
 
-    GridLayout {
-        id: grid
-        anchors.fill: parent
-        anchors.margins: 10
-        columns: Math.max(1, Math.floor((width + gridSpacing) / (cellSize + gridSpacing)))
-        rowSpacing: gridSpacing
-        columnSpacing: gridSpacing
+    Label {
+        id: title
 
-        Label {
-            id: title
+        text: qsTr("Services")
+        font: Constants.largeFont
+        horizontalAlignment: Label.AlignHCenter
+        width: parent.width
+        anchors.margins: 0
+    }
 
-            text: qsTr("Services")
-            font: Constants.largeFont
-            Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
-            Layout.columnSpan: grid.columns
-        }
+    ScrollView {
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.right: parent.right
+        anchors.top: title.bottom
+        anchors.topMargin: 0
+        clip: true
 
-        Repeater {
-            id: repeater
+        GridLayout {
+            id: grid
+            anchors.fill: parent
+            anchors.leftMargin: gridMargin
+            anchors.rightMargin: gridMargin
+            columns: columnCount
+            rowSpacing: gridSpacing
+            columnSpacing: gridSpacing
+            width: parent.width
 
-            Rectangle {
-                required property QtObject model
-                readonly property string name: model.name
-                readonly property url iconUrl: model.iconUrl
+            Repeater {
+                id: repeater
+                Rectangle {
+                    width: cellSize
+                    height: cellSize
+                    color: Qt.lighter(palette.highlight)
+                    radius: width / 10
 
-                color: Qt.lighter(palette.highlight)
-                radius: width / 10
-                Layout.preferredWidth: cellSize
-                Layout.preferredHeight: cellSize
-                Layout.alignment: Qt.AlignTop | Qt.AlignHCenter
+                    required property QtObject model
+                    readonly property string name: model.name
+                    readonly property url iconUrl: model.iconUrl
 
-                ToolButton {
-                    id: icon
+                    ToolButton {
+                        id: icon
 
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: parent.top
-                    icon.source: parent.iconUrl
-                    icon.width: parent.width - 40
-                    icon.height: parent.height - 40
-                    icon.color: "white"
-                    padding: 0
-                    flat: true
-                    down: true
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: parent.top
+                        icon.source: parent.iconUrl
+                        icon.width: parent.width - 40
+                        icon.height: parent.height - 40
+                        icon.color: "white"
+                        padding: 0
+                        flat: true
+                        down: true
 
-                    background: Rectangle {
-                        color: "transparent"
+                        background: Rectangle {
+                            color: "transparent"
+                        }
                     }
-                }
 
-                Label {
-                    text: parent.name
-                    color: "white"
-                    anchors.horizontalCenter: parent.horizontalCenter
-                    anchors.top: icon.bottom
-                    font.pointSize: 14
-                    font.weight: 600
-                }
+                    Label {
+                        text: parent.name
+                        color: "white"
+                        anchors.horizontalCenter: parent.horizontalCenter
+                        anchors.top: icon.bottom
+                        font.pointSize: 14
+                        font.weight: 600
+                    }
 
-                MouseArea {
-                    anchors.fill: parent
-                    onClicked: root.serviceClicked(parent.model)
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: root.serviceClicked(parent.model)
+                    }
                 }
             }
         }
