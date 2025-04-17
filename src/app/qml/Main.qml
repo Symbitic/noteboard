@@ -43,7 +43,7 @@ ApplicationWindow {
             return;
         }
 
-        // Pass hard-coded props and dynamic params from SideBar to StackView.
+        // Pass hard-coded props and dynamic params to StackView.
         const properties = params || propertiesMap[view] || {};
 
         switch (view) {

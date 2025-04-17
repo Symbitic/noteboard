@@ -4,11 +4,14 @@
 qt_add_qml_module(services
     URI Noteboard.Services
     QML_FILES
+        Preview/Preview.qml
+        Preview/Service.qml
         SamsungFrame/SamsungFrame.qml
         SamsungFrame/Service.qml
         ServiceBase.qml
         ServicesList.qml
     RESOURCES
+        Preview/icon.svg
         SamsungFrame/icon.svg
     IMPORTS noteboard.common
 )

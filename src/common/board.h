@@ -11,6 +11,7 @@
 #include <QtCore/qstring.h>
 #include <QtQml/qqml.h>
 #include <QtQml/qqmllist.h>
+#include <QtGui/QImage>
 
 class Board : public QObject
 {
@@ -23,6 +24,8 @@ public:
     ~Board();
 
     QQmlListProperty<BoardItem> items();
+
+    Q_INVOKABLE QImage renderToImage(qreal width, qreal height);
 
 signals:
     void itemsChanged();

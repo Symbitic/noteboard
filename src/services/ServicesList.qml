@@ -16,6 +16,7 @@ Item {
      */
     readonly property list<string> serviceNames: [
         "SamsungFrame",
+        "Preview"
     ]
     /** Array of loaded service controllers. */
     readonly property list<ServiceBase> services: []

@@ -7,6 +7,7 @@ qt_add_qml_module(common
     SOURCES
         board.cpp board.h
         item.cpp item.h
+        preview.h preview.cpp
         ssdp.cpp ssdp.h
         wakeonlan.cpp wakeonlan.h
 )
