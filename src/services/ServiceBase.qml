@@ -7,6 +7,7 @@ QtObject {
     property string name
     property url iconUrl
     property url pageUrl
+    property Board board
 
     signal home
 }

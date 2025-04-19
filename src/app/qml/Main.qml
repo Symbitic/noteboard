@@ -67,6 +67,7 @@ ApplicationWindow {
 
     ServicesList {
         id: services
+        board: board
     }
 
     Shortcut {
