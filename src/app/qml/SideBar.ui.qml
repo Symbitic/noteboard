@@ -143,8 +143,13 @@ Column {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.horizontalCenter: parent.horizontalCenter
 
-                            Image {
-                                source: delegate.iconUrl
+                            Button {
+                                icon.source: delegate.iconUrl
+                                icon.color: "white"
+                                icon.height: 30
+                                icon.width: 30
+                                background: Item {}
+                                onClicked: delegate.clicked()
                             }
 
                             Label {
