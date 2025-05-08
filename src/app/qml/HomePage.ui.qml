@@ -10,17 +10,23 @@ Check out https://doc.qt.io/qtcreator/creator-quick-ui-forms.html for details on
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import noteboard.common
 
 Page {
     id: root
 
+    // Minimum width of note
+    property int noteWidth: 280
+    property int noteHeight: 150
+
     property alias model: repeater.model
     property alias note: repeater.delegate
+    property alias footerAddButton: footerAddButton
+    property alias headerAddButton: headerAddButton
 
-    topPadding: 4
-    leftPadding: 27
-    rightPadding: 27
-    bottomPadding: 13
+    signal noteClicked(QtObject note)
+
+    padding: 7
 
     states: [
         State {
@@ -29,65 +35,69 @@ Page {
 
             PropertyChanges {
                 target: internal
-                showTitle: true
-            }
-            AnchorChanges {
-                target: grid
-                anchors.top: title.bottom
+                showFooter: false
+                showHeader: true
+                columnCount: Math.floor(root.availableWidth / noteWidth)
             }
         },
         State {
             name: "mobileLayout"
-            when: Constants.layout !== Constants.Layout.Desktop
 
             PropertyChanges {
                 target: internal
-                showTitle: false
-            }
-            AnchorChanges {
-                target: grid
-                anchors.top: parent.top
+                showFooter: true
+                showHeader: false
+                columnCount: 1
             }
         }
     ]
 
+    header: RowLayout {
+        visible: internal.showHeader
+
+        Label {
+            elide: Text.ElideRight
+            font: Constants.largeFont
+            text: qsTr("Notes")
+            verticalAlignment: Qt.AlignVCenter
+            Layout.fillWidth: true
+            Layout.leftMargin: 7
+        }
+
+        ToolButton {
+            id: headerAddButton
+            display: ToolButton.IconOnly
+            icon.source: "../icons/add.svg"
+            text: qsTr("Add note")
+            Layout.rightMargin: 7
+        }
+    }
+
+    footer: ToolBar {
+        visible: internal.showFooter
+        ToolButton {
+            id: footerAddButton
+            anchors.right: parent.right
+            display: ToolButton.IconOnly
+            icon.source: "../icons/add.svg"
+            text: qsTr("Add note")
+        }
+    }
+
     QtObject {
         id: internal
 
-        property bool showTitle: false
+        property bool showHeader: false
+        property bool showFooter: true
+        property int columnCount: 1
+        property int cellSize: root.availableWidth / columnCount
     }
 
-    Label {
-        id: title
-
-        width: root.width
-        visible: internal.showTitle
-        text: qsTr("Notes")
-        font: Constants.largeFont
-        elide: Text.ElideRight
-    }
-
-    GridLayout {
-        id: grid
-
+    GridView {
+        id: repeater
         width: parent.width
-        anchors.topMargin: 10
-        rowSpacing: 10
-        columnSpacing: 10
-        columns: Math.max(Math.floor(root.width / (270+10)), 1)
-
-        Repeater {
-            id: repeater
-        }
-    }
-
-    RoundButton {
-        text: qsTr("+")
-        anchors.right: parent.right
-        anchors.rightMargin: 0
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 0
-        onClicked: {
-        }
+        height: parent.height
+        cellWidth: internal.cellSize
+        cellHeight: noteHeight
     }
 }

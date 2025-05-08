@@ -8,4 +8,5 @@ import QtCore
 Settings {
     property string style
     property int theme: Constants.Theme.System
+    property url filepath: `${StandardPaths.writableLocation(StandardPaths.DocumentsLocation)}/NOTES.md`
 }

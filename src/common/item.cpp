@@ -4,9 +4,12 @@
 #include "item.h"
 
 #include <QRandomGenerator>
+#include <QtCore/qloggingcategory.h>
+
+Q_LOGGING_CATEGORY(itemLog, "noteboard.common.item")
 
 // QUuid doesn't support v4?
-static inline QString randomUUID()
+QString Crypto::randomUUID()
 {
     QByteArray bytes(16, Qt::Uninitialized);
     QRandomGenerator::global()->generate(bytes.begin(), bytes.end());
@@ -23,50 +26,76 @@ static inline QString randomUUID()
     return uuid;
 }
 
-BoardItem::BoardItem(QObject *parent)
-    : QObject(parent),
-      m_uuid(randomUUID()),
-      m_text(""),
-      m_createdDate(QDateTime::currentDateTime()),
-      m_modifiedDate(QDateTime::currentDateTime())
+BoardNotesModel::BoardNotesModel(QObject *parent) : QAbstractListModel(parent) { }
+
+int BoardNotesModel::rowCount(const QModelIndex &parent) const
 {
+    Q_UNUSED(parent);
+    return m_notes.size();
 }
 
-BoardItem::BoardItem(const BoardItem &other)
-    : QObject(nullptr),
-      m_uuid(other.m_uuid),
-      m_text(other.m_text),
-      m_createdDate(other.m_createdDate),
-      m_modifiedDate(other.m_modifiedDate)
+QVariant BoardNotesModel::data(const QModelIndex &index, int role) const
 {
-}
-
-QString BoardItem::id() const
-{
-    return m_uuid;
-}
-
-QString BoardItem::text() const
-{
-    return m_text;
-}
-
-QDateTime BoardItem::createdDate() const
-{
-    return m_createdDate;
-}
-
-QDateTime BoardItem::modifiedDate() const
-{
-    return m_modifiedDate;
-}
-
-void BoardItem::setText(const QString &text)
-{
-    if (m_text == text) {
-        return;
+    if (index.row() < 0 || index.row() >= m_notes.count()) {
+        return QVariant();
     }
-    m_text = text;
-    m_modifiedDate = QDateTime::currentDateTime();
-    emit dataChanged();
+
+    switch (static_cast<Role>(role)) {
+    case Role::Title:
+        return m_notes.at(index.row()).title();
+    case Role::Text:
+        return m_notes.at(index.row()).text();
+    case Role::Uuid:
+        return m_notes.at(index.row()).uuid();
+    default:
+        break;
+    }
+    return QVariant();
+}
+
+void BoardNotesModel::addNotes(const QList<Note> &notes)
+{
+    beginInsertRows(QModelIndex{}, rowCount(), rowCount() + notes.size() - 1);
+    m_notes.append(notes);
+    endInsertRows();
+}
+
+QHash<int, QByteArray> BoardNotesModel::roleNames() const
+{
+    static const QHash<int, QByteArray> names{ { static_cast<int>(Role::Uuid), "uuid" },
+                                               { static_cast<int>(Role::Title), "title" },
+                                               { static_cast<int>(Role::Text), "text" } };
+    return names;
+}
+
+bool BoardNotesModel::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    if (!index.isValid() || index.row() >= m_notes.size()) {
+        return false;
+    }
+
+    Note note = m_notes.at(index.row());
+    QList<int> roles;
+    switch (static_cast<Role>(role)) {
+    case Role::Title:
+        if (note.title() != value.toString()) {
+            note.setTitle(value.toString());
+            roles.append(role);
+        }
+        break;
+    case Role::Text:
+        if (note.text() != value.toString()) {
+            note.setText(value.toString());
+            roles.append(role);
+        }
+        break;
+    }
+
+    if (roles.size() > 0) {
+        m_notes.replace(index.row(), note);
+        emit dataChanged(index, index, roles);
+        return true;
+    }
+
+    return false;
 }

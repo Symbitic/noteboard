@@ -16,22 +16,35 @@
 class Board : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(QQmlListProperty<BoardItem> items READ items NOTIFY itemsChanged)
+    Q_PROPERTY(QString error READ error NOTIFY errorChanged)
+    Q_PROPERTY(QString title READ title WRITE setTitle NOTIFY titleChanged)
+    Q_PROPERTY(QAbstractListModel *notesModel READ notesModel NOTIFY loaded)
     QML_ELEMENT
 
 public:
     explicit Board(QObject *parent = nullptr);
     ~Board();
 
-    QQmlListProperty<BoardItem> items();
+    QString error() const;
+
+    QString title() const;
+    void setTitle(const QString &title);
+
+    QAbstractListModel *notesModel();
+
+    Q_INVOKABLE bool loadFromFile(const QUrl &filepath);
 
     Q_INVOKABLE QImage renderToImage(qreal width, qreal height);
 
 signals:
-    void itemsChanged();
+    void errorChanged();
+    void loaded();
+    void titleChanged();
 
 private:
-    QList<BoardItem *> m_items;
+    QString m_error;
+    QString m_title;
+    BoardNotesModel m_notesModel;
 };
 
 #endif

@@ -12,6 +12,7 @@ QtObject {
     }
     enum View {
         Home,
+        Edit,
         Services,
         Settings,
         About,

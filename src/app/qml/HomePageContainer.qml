@@ -6,6 +6,7 @@ import QtQml.Models
 import QtQuick
 import QtQuick.Controls
 import QtQuick.Layouts
+import noteboard.common
 
 HomePage {
     function extractTitle(markdown: string): string {
@@ -48,41 +49,31 @@ HomePage {
             .trim();
     }
 
-    ListModel {
-        id: notesList
+    //footerAddButton.onClicked: noteClicked({ text: "", uuid: Crypto.randomUUID() })
+    //headerAddButton.onClicked: noteClicked({ text: "", uuid: Crypto.randomUUID() })
 
-        ListElement {
-            uuid: "1"
-            text: "Watch and sort video collection"
-        }
-        ListElement {
-            uuid: "2"
-            text: "**WebComponents Framework**\n\n- Make basic website\n- GitHub Workflow to enforce conventional commits\n"
-        }
-        ListElement {
-            uuid: "3"
-            text: "Sign up for Benefits"
-        }
-        ListElement {
-            uuid: "4"
-            text: "Qt Devcontainer Feature"
-        }
-    }
-    Component.onCompleted: {
-        for (let i=0; i<notesList.count; i++) {
-            notesList.setProperty(i, "createdDate", new Date())
-        }
-    }
+    note: Item {
+        id: delegate
+        width: GridView.view.cellWidth
+        height: GridView.view.cellHeight
+        required property QtObject model
+        required property int index
 
-    property url notesFolder: `${StandardPaths.writableLocation(StandardPaths.DocumentsLocation)}/Notes`
+        Rectangle {
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.verticalCenter: parent.verticalCenter
+            color: "transparent"
+            height: parent.height - 10
+            width: parent.width - 10
 
-    model: notesList
+            NoteCard {
+                anchors.fill: parent
+                title: delegate.model.title
 
-    note: NoteCard {
-        required property string text
-        title: extractTitle(text)
-        Layout.preferredHeight: content.implicitHeight
-        Layout.minimumWidth: 270
-        Layout.alignment: Qt.AlignHCenter | Qt.AlignTop
+                TapHandler {
+                    onTapped: noteClicked(delegate.model)
+                }
+            }
+        }
     }
 }

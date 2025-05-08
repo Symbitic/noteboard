@@ -30,6 +30,9 @@ ApplicationWindow {
     // Map of page names to properties to pass to stackView.
     // This was the most delarative method since ListModel doesn't have key-value objects.
     readonly property variant propertiesMap: ({
+        [Constants.View.Home]: {
+            model: board.notesModel
+        },
         [Constants.View.Services]: {
             servicesList: services
         },
@@ -40,7 +43,9 @@ ApplicationWindow {
 
     function navigate(view: int, source: string, params: variant): void {
         if (view === Constants.currentView && source === root.lastSource) {
-            return;
+            if (!(view in [Constants.View.Home, Constants.View.Services])) {
+                return;
+            }
         }
 
         // Pass hard-coded props and dynamic params to StackView.
@@ -63,6 +68,12 @@ ApplicationWindow {
 
     Board {
         id: board
+
+        Component.onCompleted: {
+            if (AppSettings.filepath) {
+                loadFromFile(AppSettings.filepath);
+            }
+        }
     }
 
     ServicesList {
@@ -231,7 +242,9 @@ ApplicationWindow {
         anchors.top: parent.top
         anchors.bottom: parent.bottom
         anchors.right: parent.right
-        initialItem: HomePageContainer {}
+        initialItem: HomePageContainer {
+            model: board.notesModel
+        }
     }
 
     StateGroup {
@@ -288,10 +301,13 @@ ApplicationWindow {
         function onServiceClicked(service: QtObject) {
             navigate(Constants.View.Services, service.pageUrl, { service });
         }
+
+        function onNoteClicked(note: QtObject) {
+            navigate(Constants.View.Edit, "qrc:/qt/qml/Noteboard/qml/EditPageContainer.qml", { note });
+        }
     }
 
     Component.onCompleted: {
-        Constants.init(root)
-        navigate(Constants.View.Services, "qrc:/qt/qml/Noteboard/qml/ServicesPageContainer.qml")
+        Constants.init(root);
     }
 }

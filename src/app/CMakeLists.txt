@@ -30,6 +30,8 @@ qt_add_qml_module(noteboard
         qml/AboutPageContainer.qml
         qml/AppSettings.qml
         qml/Constants.qml
+        qml/EditPage.ui.qml
+        qml/EditPageContainer.qml
         qml/HomePage.ui.qml
         qml/HomePageContainer.qml
         qml/Main.qml
@@ -40,6 +42,7 @@ qt_add_qml_module(noteboard
         qml/SettingsPageContainer.qml
         qml/SideBar.ui.qml
     RESOURCES
+        icons/add.svg
         icons/arrow-down.svg
         icons/arrow.svg
         icons/back.svg
